@@ -88,7 +88,7 @@ import PdfPreview from "./components/PdfPreview.vue";
 // ─── Reactive state ──────────────────────────────────────────
 
 const selectedFile = ref<File | null>(null);
-const quality = ref("ebook");
+const quality = ref("EBOOK");
 const compressing = ref(false);
 
 const progress = ref(0);
