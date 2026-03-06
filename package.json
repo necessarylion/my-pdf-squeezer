@@ -1,5 +1,5 @@
 {
-  "name": "pdf-compress",
+  "name": "my-pdf-squeezer",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@hugeicons/core-free-icons": "^4.0.0",
+    "@hugeicons/vue": "^1.0.4",
     "@okathira/ghostpdl-wasm": "^1.1.0",
     "pdfjs-dist": "^5.5.207",
     "vue": "^3.5.25"

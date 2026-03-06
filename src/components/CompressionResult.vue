@@ -2,7 +2,7 @@
   <div class="mt-5 rounded-[10px] p-5" :style="containerStyle">
     <!-- Error state -->
     <template v-if="result.error">
-      <div class="text-[#ff4d4d] text-[0.85rem]">Error: {{ result.error }}</div>
+      <div class="text-error text-[0.85rem]">Error: {{ result.error }}</div>
     </template>
 
     <!-- Success state -->
@@ -50,7 +50,13 @@ const props = defineProps<{
 
 const containerStyle = computed(() =>
   props.result.error
-    ? { background: "#1f0000", border: "1px solid #3d0000" }
-    : { background: "#111f00", border: "1px solid #2a3d00" },
+    ? {
+        background: "var(--color-error-bg)",
+        border: "1px solid var(--color-error-border)",
+      }
+    : {
+        background: "var(--color-success-bg)",
+        border: "1px solid var(--color-success-border)",
+      },
 );
 </script>

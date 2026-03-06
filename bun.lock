@@ -5,6 +5,8 @@
     "": {
       "name": "pdf-compress",
       "dependencies": {
+        "@hugeicons/core-free-icons": "^4.0.0",
+        "@hugeicons/vue": "^1.0.4",
         "@okathira/ghostpdl-wasm": "^1.1.0",
         "pdfjs-dist": "^5.5.207",
         "vue": "^3.5.25",
@@ -105,6 +107,10 @@
     "@eslint/object-schema": ["@eslint/object-schema@3.0.2", "", {}, "sha512-HOy56KJt48Bx8KmJ+XGQNSUMT/6dZee/M54XyUyuvTvPXJmsERRvBchsUVx1UMe1WwIH49XLAczNC7V2INsuUw=="],
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.6.0", "", { "dependencies": { "@eslint/core": "^1.1.0", "levn": "^0.4.1" } }, "sha512-bIZEUzOI1jkhviX2cp5vNyXQc6olzb2ohewQubuYlMXZ2Q/XjBO0x0XhGPvc9fjSIiUN0vw+0hq53BJ4eQSJKQ=="],
+
+    "@hugeicons/core-free-icons": ["@hugeicons/core-free-icons@4.0.0", "", {}, "sha512-bzfbKumv3ke3ajbe2MyXi9i0I/cdsZ6n/mO9EfIPNSL++pHLqs7nSGRIVUtjF4xrrEyVkfhxssv4Jek8DPA6gA=="],
+
+    "@hugeicons/vue": ["@hugeicons/vue@1.0.4", "", { "peerDependencies": { "vue": "^2.6.0 || ^3.0.0" } }, "sha512-OtFEXbyW5jYUig98C/n/HygktLvfF5Ga6nN6gK8R0E0jCrVw3EfgoZZVXqo+xGxyIjH5R1wdbg6nJrtf6mzLKQ=="],
 
     "@humanfs/core": ["@humanfs/core@0.19.1", "", {}, "sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA=="],
 

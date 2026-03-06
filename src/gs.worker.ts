@@ -51,16 +51,25 @@ function unlinkSafe(mod: GhostscriptModule, path: string): void {
   }
 }
 
-function buildGsArgs(qualityValue: string): string[] {
-  return [
+function buildGsArgs(qualityValue: string, preserveJpeg: boolean): string[] {
+  const args = [
     "-sDEVICE=pdfwrite",
     "-dCompatibilityLevel=1.4",
     `-dPDFSETTINGS=/${qualityValue.toLowerCase()}`,
     "-dNOPAUSE",
     "-dBATCH",
-    "-sOutputFile=/output.pdf",
-    "/input.pdf",
   ];
+
+  if (preserveJpeg) {
+    args.push(
+      "-dPassThroughJPEGImages=true",
+      "-dDetectDuplicateImages=false",
+      "-dColorConversionStrategy=/LeaveColorUnchanged",
+    );
+  }
+
+  args.push("-sOutputFile=/output.pdf", "/input.pdf");
+  return args;
 }
 
 function postProgress(pct: number, msg: string): void {
@@ -70,6 +79,7 @@ function postProgress(pct: number, msg: string): void {
 async function handleCompress(
   fileBuffer: ArrayBuffer,
   quality: string,
+  preserveJpeg: boolean,
 ): Promise<void> {
   postProgress(0, "Loading Ghostscript engine...");
   const mod = await loadGhostscript();
@@ -87,7 +97,7 @@ async function handleCompress(
   postProgress(30, `Compressing (${quality.toLowerCase()})...`);
 
   const t1 = performance.now();
-  const exitCode = mod.callMain(buildGsArgs(quality));
+  const exitCode = mod.callMain(buildGsArgs(quality, preserveJpeg));
 
   if (exitCode !== 0) {
     self.postMessage({ type: "error", message: `Ghostscript exited with code ${exitCode}` });
@@ -130,7 +140,7 @@ self.onmessage = async (e: MessageEvent) => {
     }
   } else if (type === "compress") {
     try {
-      await handleCompress(e.data.fileBuffer, e.data.quality);
+      await handleCompress(e.data.fileBuffer, e.data.quality, e.data.preserveJpeg ?? false);
     } catch (err) {
       self.postMessage({
         type: "error",

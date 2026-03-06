@@ -3,7 +3,23 @@
     class="w-full transition-all duration-300 mt-10"
     :class="selectedFile ? 'max-w-275' : 'max-w-140'"
   >
-    <h1 class="font-mono text-2xl text-accent mb-1 -mt-8">PDF_OPTIMIZER</h1>
+    <div class="flex items-center justify-between mb-1 -mt-8">
+      <h1 class="font-display text-2xl font-bold tracking-tight text-accent">
+        MY_PDF_SQUEEZER
+      </h1>
+      <button
+        type="button"
+        class="text-muted hover:text-accent bg-transparent border-none cursor-pointer transition-colors text-lg p-1"
+        :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+        @click="toggleTheme"
+      >
+        <HugeiconsIcon
+          :icon="isDark ? Sun02Icon : Moon02Icon"
+          :size="20"
+          color="currentColor"
+        />
+      </button>
+    </div>
     <p class="text-muted text-sm mb-6">
       Real PDF compression via Ghostscript WASM — runs entirely in your browser.
     </p>
@@ -22,6 +38,46 @@
         <FileInfo v-if="selectedFile" :file="selectedFile" @change="loadFile" />
 
         <QualitySelector v-model="quality" :disabled="!selectedFile" />
+
+        <!-- Advanced options -->
+        <div class="mt-4">
+          <button
+            type="button"
+            class="flex items-center gap-1 text-xs text-muted font-mono cursor-pointer bg-transparent border-none p-0 hover:text-accent transition-colors"
+            @click="showAdvanced = !showAdvanced"
+          >
+            <HugeiconsIcon
+              :icon="showAdvanced ? ArrowDown01Icon : ArrowRight01Icon"
+              :size="14"
+              color="currentColor"
+            />
+            Advanced options
+          </button>
+          <div v-if="showAdvanced" class="mt-3 pl-3 border-l border-border">
+            <label
+              class="flex items-center gap-2.5 cursor-pointer text-sm text-muted"
+            >
+              <button
+                type="button"
+                role="switch"
+                :aria-checked="preserveJpeg"
+                class="relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border-none cursor-pointer transition-colors duration-200"
+                :class="preserveJpeg ? 'bg-accent' : 'bg-border'"
+                @click="preserveJpeg = !preserveJpeg"
+              >
+                <span
+                  class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-sm transition-transform duration-200"
+                  :class="preserveJpeg ? 'translate-x-4.5' : 'translate-x-0.5'"
+                />
+              </button>
+              <span class="font-mono text-xs">Preserve JPEG images</span>
+            </label>
+            <p class="mt-1.5 text-[11px] text-muted/60 leading-relaxed">
+              Pass through JPEG images without re-encoding. Faster compression
+              and keeps original image quality, but may result in larger files.
+            </p>
+          </div>
+        </div>
 
         <!-- Compress button -->
         <button
@@ -59,7 +115,7 @@
           level — lower quality means smaller file size.
         </p>
         <p class="mt-3 text-xs text-muted leading-relaxed">
-          <strong class="text-[#888]">Privacy:</strong> Your files are never
+          <strong class="text-muted">Privacy:</strong> Your files are never
           uploaded or stored anywhere. The entire compression process runs
           directly in your browser — no servers involved.
         </p>
@@ -75,6 +131,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { HugeiconsIcon } from "@hugeicons/vue";
+import {
+  Sun02Icon,
+  Moon02Icon,
+  ArrowRight01Icon,
+  ArrowDown01Icon,
+} from "@hugeicons/core-free-icons";
 
 import type { CompressionResult } from "./types";
 import { compressPdf, preloadGhostscript } from "./ghostscript";
@@ -89,6 +152,8 @@ import PdfPreview from "./components/PdfPreview.vue";
 
 const selectedFile = ref<File | null>(null);
 const quality = ref("EBOOK");
+const showAdvanced = ref(false);
+const preserveJpeg = ref(false);
 const compressing = ref(false);
 
 const progress = ref(0);
@@ -102,8 +167,29 @@ const previewSource = ref<File | Uint8Array | null>(null);
 
 let downloadUrl: string | null = null;
 
+// ─── Theme ────────────────────────────────────────────────────
+
+const isDark = ref(
+  localStorage.getItem("theme") === "dark" ||
+    (!localStorage.getItem("theme") &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches),
+);
+
+function applyTheme(): void {
+  document.documentElement.classList.toggle("dark", isDark.value);
+}
+
+function toggleTheme(): void {
+  isDark.value = !isDark.value;
+  localStorage.setItem("theme", isDark.value ? "dark" : "light");
+  applyTheme();
+}
+
 // Preload Ghostscript WASM in the background on mount
-onMounted(() => preloadGhostscript());
+onMounted(() => {
+  applyTheme();
+  preloadGhostscript();
+});
 
 // ─── Helpers ─────────────────────────────────────────────────
 
@@ -134,6 +220,7 @@ async function compress(): Promise<void> {
     const { outputBytes, originalSize, optimizedSize } = await compressPdf({
       file: selectedFile.value,
       quality: quality.value,
+      preserveJpeg: preserveJpeg.value,
       onProgress,
     });
 

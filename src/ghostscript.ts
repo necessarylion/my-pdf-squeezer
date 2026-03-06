@@ -30,6 +30,7 @@ export function preloadGhostscript(): Promise<void> {
 export interface CompressOptions {
   file: File;
   quality: string;
+  preserveJpeg: boolean;
   onProgress: (pct: number, msg: string) => void;
 }
 
@@ -41,7 +42,7 @@ export interface CompressResult {
 
 /** Compress a PDF file using Ghostscript WASM in a Web Worker */
 export function compressPdf(options: CompressOptions): Promise<CompressResult> {
-  const { file, quality, onProgress } = options;
+  const { file, quality, preserveJpeg, onProgress } = options;
   const w = getWorker();
 
   return new Promise((resolve, reject) => {
@@ -116,7 +117,9 @@ export function compressPdf(options: CompressOptions): Promise<CompressResult> {
     w.addEventListener("message", handler);
 
     file.arrayBuffer().then((fileBuffer) => {
-      w.postMessage({ type: "compress", fileBuffer, quality }, [fileBuffer]);
+      w.postMessage({ type: "compress", fileBuffer, quality, preserveJpeg }, [
+        fileBuffer,
+      ]);
     });
   });
 }
