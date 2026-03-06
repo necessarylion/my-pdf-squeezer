@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0e0e0e;
+  --color-surface: #1a1a1a;
+  --color-border: #2a2a2a;
+  --color-accent: #c8f03c;
+  --color-text: #f0f0f0;
+  --color-muted: #666;
+  --font-mono: 'Space Mono', monospace;
+  --font-sans: 'DM Sans', sans-serif;
+}
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+}
