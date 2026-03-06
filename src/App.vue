@@ -121,9 +121,13 @@
         </p>
       </div>
 
-      <!-- Right panel — PDF preview -->
+      <!-- Right panel — PDF preview (hidden on mobile) -->
       <Transition name="slide">
-        <PdfPreview v-if="selectedFile" :source="previewSource" />
+        <PdfPreview
+          v-if="selectedFile"
+          :source="previewSource"
+          class="hidden md:block"
+        />
       </Transition>
     </div>
   </div>
@@ -152,7 +156,7 @@ import PdfPreview from "./components/PdfPreview.vue";
 
 const selectedFile = ref<File | null>(null);
 const quality = ref("EBOOK");
-const showAdvanced = ref(false);
+const showAdvanced = ref(true);
 const preserveJpeg = ref(false);
 const compressing = ref(false);
 
