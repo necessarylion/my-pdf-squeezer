@@ -157,7 +157,7 @@ import PdfPreview from "./components/PdfPreview.vue";
 const selectedFile = ref<File | null>(null);
 const quality = ref("EBOOK");
 const showAdvanced = ref(true);
-const preserveJpeg = ref(false);
+const preserveJpeg = ref(true);
 const compressing = ref(false);
 
 const progress = ref(0);
