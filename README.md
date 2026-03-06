@@ -1,4 +1,6 @@
-# PDF Optimizer
+# <img src="public/favicon-32x32.png" width="24" height="24" alt="favicon"> PDF Optimizer
+
+[https://my-pdf-squeezer.web.app/](https://my-pdf-squeezer.web.app/)
 
 Client-side PDF compression powered by Ghostscript 10.06.0 compiled to WebAssembly. Everything runs entirely in the browser — no files are uploaded or stored on any server.
 
